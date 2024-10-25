@@ -1,6 +1,6 @@
 # Tiny Tapeout project information
 project:
-  title:        "XOR Encryptor"      # Project title
+  title:        "XOR-Encryptor"      # Project title
   author:       "Franco Mezzarapa"      # Your name
   discord:      "dr.trillclinton"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "Given serial input, performs an XOR encryption and returns ciphertext."      # One line description of what your project does
