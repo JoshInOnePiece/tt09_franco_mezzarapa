@@ -1,4 +1,4 @@
-module xor_top(
+module tt_um_franco_mezzarapa(
     input  iClk,             // input clock.
     input  iRst,             // input Reset Signal.
     input  iEn,
