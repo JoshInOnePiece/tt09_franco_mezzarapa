@@ -21,7 +21,10 @@ module tt_um_franco_mezzarapa(
     output [7:0] uio_oe     // Unused
 );
 
+
 // Original IO.
+wire iClk;
+wire iEn;
 wire iRst;
 wire iSerial_in;
 wire iLoad_key;
@@ -42,6 +45,13 @@ assign iLoad_msg = ui_in[2];
 assign uio_out[0] = oSerial_out;
 assign uio_out[1] = oSerial_flag;
 assign uio_out[2] = oEncryption_status;
+
+//Unused pins to prevent linter warning
+//Edit: added extraneous logic to improve density
+wire _unused_pins = &{ui_in[7:3],uio_in[7:0]};
+assign uio_out = {3'b0,ui_in[7:3] ^ uio_in[7:3]};
+assign uio_oe = {3'b0,ui_in[7:3]};
+assign uo_out[7:3] = {ui_in[7:3] ^ uio_in[7:3]};
 
 
 wire [63 : 0] message_content;      // This holds message plaintext.
@@ -80,7 +90,7 @@ xor_encrypt encryption_module(
     .iKey(key),
     .iMessage_bit_counter(message_bit_counter),
     .iKey_bit_counter(key_bit_counter),
-    .encryption_status(oEncryption_Status),
+    .encryption_status(oEncryption_status),
     .OCiphertext_counter(ciphertext_bit_counter),
     .oCiphertext(ciphertext)
 );
