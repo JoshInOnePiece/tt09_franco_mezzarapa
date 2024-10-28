@@ -1,14 +1,48 @@
 module tt_um_franco_mezzarapa(
-    input  clk,             // input clock.
-    input  rst_n,             // input Reset Signal.
-    input  ena,
-    input  iSerial_in,       // input Serial In.
-    input  iLoad_key,        // input load key flag.
-    input  iLoad_msg,        // input load msg flag.
-    output encryption_status, 
-    output oSerial_out,
-    output oSerial_flag
+
+//     input  clk,             // input clock.
+//     input  rst_n,             // input Reset Signal.
+//     input  ena,
+//     input  iSerial_in,       // input Serial In.
+//     input  iLoad_key,        // input load key flag.
+//     input  iLoad_msg,        // input load msg flag.
+//     output encryption_status, 
+//     output oSerial_out,
+//     output oSerial_flag
+
+    input clk,              // External clock
+    input ena,              // Enable line
+    input rst_n,            // Active low enable.
+    input  [7:0] ui_in,     // Inpute wire array
+    output [7:0] uo_out,    // Output wire array
+    
+    input [7:0] uio_in,     // Unused
+    output [7:0] uio_out,   // Unused
+    output [7:0] uio_oe     // Unused
 );
+
+// Original IO.
+wire iRst;
+wire iSerial_in;
+wire iLoad_key;
+wire iLoad_msg;
+wire oEncryption_status;
+wire oSerial_out;
+wire oSerial_flag;
+
+//Input assign with repsect to TT.
+assign iClk = clk;
+assign iRst = ~rst_n;
+assign iEn = ena;
+assign iSerial_in = ui_in[0];
+assign iLoad_key = ui_in[1];
+assign iLoad_msg = ui_in[2];
+
+// Output assign with respect to TT
+assign uio_out[0] = oSerial_out;
+assign uio_out[1] = oSerial_flag;
+assign uio_out[2] = oEncryption_status;
+
 
 wire [63 : 0] message_content;      // This holds message plaintext.
 wire [7  : 0] key;                  // xor key used. 
@@ -46,7 +80,7 @@ xor_encrypt encryption_module(
     .iKey(key),
     .iMessage_bit_counter(message_bit_counter),
     .iKey_bit_counter(key_bit_counter),
-    .encryption_status(encryption_status),
+    .encryption_status(oEncryption_Status),
     .OCiphertext_counter(ciphertext_bit_counter),
     .oCiphertext(ciphertext)
 );
