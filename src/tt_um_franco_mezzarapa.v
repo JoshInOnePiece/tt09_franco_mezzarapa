@@ -90,7 +90,7 @@ xor_encrypt encryption_module(
     .iKey(key),
     .iMessage_bit_counter(message_bit_counter),
     .iKey_bit_counter(key_bit_counter),
-    .encryption_status(oEncryption_status),
+    .encryption_status(uo_out[2]),
     .OCiphertext_counter(ciphertext_bit_counter),
     .oCiphertext(ciphertext)
 );
@@ -102,7 +102,7 @@ serialize #(.MSG_SIZE(64)) serializer_unit(
      .iCiphertext_counter(ciphertext_bit_counter),        // Position counter for START OF serial operations.
      .iCiphertext(ciphertext),                            // Ciphertext
      .oSerial_out(uo_out[0]),                           // Serial output
-     .oSerial_flag(oSerial_flag)                          // Serial status flag for receiving chip.
+     .oSerial_flag(uo_out[1])                          // Serial status flag for receiving chip.
 );
 
 endmodule
