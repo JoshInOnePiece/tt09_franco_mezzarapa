@@ -4,7 +4,20 @@
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
-#1
+
+async def seriallyInput(DUT, dataType, data, clockDelay):
+    dataString = str(data)
+    if(dataType == 1): #This means that we are inputting a message
+        await ClockCycles(DUT.iClk, clockDelay)
+        for x in range(512):
+            DUT.iData_in.value = int(dataString[x])
+            await ClockCycles(DUT.iClk, clockDelay)
+    else: # Otherwise we are inputting a key
+        DUT.iLoad_key.value = 1
+        for x in range(32):
+            DUT.iData_in.value = int(dataString[x])
+            await ClockCycles(DUT.iClk, clockDelay)
+            
 @cocotb.test()
 async def test_project(dut):
     dut._log.info("Start")
@@ -14,12 +27,27 @@ async def test_project(dut):
     cocotb.start_soon(clock.start())
     await ClockCycles(dut.clk, 2)
 
-    dut._.log.info("Reset")
+    dut._log.info("Reset")
     dut.clk.value = 0
     dut.ena.value = 0
     dut.rst_n.value = 1
     dut.ui_in.value = 0
     await ClockCycles(dut.clk, 10)
+
+    key = 0xA5
+    message = 0xA3B1F9D2E7C6A594
+
+    dut.ena.value = 0
+    dut.rst_n.value = 0
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 2)
+    dut.rst_n.value = 1
+    dut.ena.value = 1
+    await ClockCycles(dut.clk, 2)
+
+
+
+
 
     #Reset
     # dut._log.info("Reset")
