@@ -13,7 +13,7 @@ ifneq ($(GATES),yes)
 SIM_BUILD				= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,deserializer.v)
-VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,serialize.v)
+VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,serializer.v)
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,xor_encrypt.v)
 COMPILE_ARGS 		+= -I$(SRC_DIR)
 
