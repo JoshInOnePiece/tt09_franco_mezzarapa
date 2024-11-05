@@ -1,4 +1,4 @@
-module serialize #(parameter MSG_SIZE = 64)(
+module serializer #(parameter MSG_SIZE = 64)(
     input iEn,
     input iClk,
     input iRst,

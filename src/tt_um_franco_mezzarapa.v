@@ -49,9 +49,7 @@ assign iRst = ~rst_n;
 //Unused pins to prevent linter warning
 //Edit: added extraneous logic to improve density
 wire _unused_pins = &{ui_in[7:3],uio_in[7:0]};
-assign uio_out = {3'b0,ui_in[7:3] ^ ui_in[7:3]};
-assign uio_oe = {3'b0,ui_in[7:3]};
-assign uo_out[7:3] = {ui_in[7:3] ^ uio_in[7:3]};
+
 
 
 wire [63 : 0] message_content;      // This holds message plaintext.
@@ -95,7 +93,7 @@ xor_encrypt encryption_module(
     .oCiphertext(ciphertext)
 );
 
-serialize #(.MSG_SIZE(64)) serializer_unit(
+serializer #(.MSG_SIZE(64)) serializer_unit(
      .iEn(ena),
      .iClk(clk),
      .iRst(iRst),
