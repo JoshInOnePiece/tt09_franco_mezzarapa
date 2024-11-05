@@ -7,7 +7,7 @@ module xor_encrypt(
     input [$clog2(64):0] iMessage_bit_counter,
     input [$clog2(8):0] iKey_bit_counter,
     output reg encryption_status,
-    output reg [$clog2(64) - 1:0] OCiphertext_counter,    // Ciphertext counter
+    output reg [$clog2(63+1) - 1:0] OCiphertext_counter,    // Ciphertext counter
     output reg [63:0] oCiphertext            // Ciphertext output
 );
 
