@@ -14,7 +14,7 @@ async def test_project(dut):
     cocotb.start_soon(clock.start())
     await ClockCycles(dut.clk, 2)
 
-    dut._.log.ingo("Reset")
+    dut._.log.info("Reset")
     dut.clk.value = 0
     dut.ena.value = 0
     dut.rst_n.value = 1
