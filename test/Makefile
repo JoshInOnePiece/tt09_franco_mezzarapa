@@ -9,7 +9,7 @@ PROJECT_SOURCES = tt_um_franco_mezzarapa.v
 
 ifneq ($(GATES),yes)
 
-# RTL simulation:
+# RTL simulations:
 SIM_BUILD				= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,deserializer.v)
