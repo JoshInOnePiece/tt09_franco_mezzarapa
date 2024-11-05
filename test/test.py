@@ -4,7 +4,7 @@
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
-
+#1
 @cocotb.test()
 async def test_project(dut):
     dut._log.info("Start")
