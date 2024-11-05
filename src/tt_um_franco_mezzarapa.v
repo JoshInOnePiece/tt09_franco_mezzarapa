@@ -59,7 +59,7 @@ wire [7  : 0] key;                  // xor key used.
 wire [63 : 0] ciphertext;
 
 wire [$clog2(64)  : 0] message_bit_counter;    // position counter for message. - 6 bits total.
-wire [$clog2(64)  : 0] ciphertext_bit_counter; //  position counter for ciphertext - 6 bits total.
+wire [$clog2(64)-1  : 0] ciphertext_bit_counter; //  position counter for ciphertext - 6 bits total.
 wire [$clog2(8)   : 0] key_bit_counter;        // position counter for key.      - 2 bits total.
 
 deserializer #(.DATA_SIZE(8)) deserializer_key(

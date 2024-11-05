@@ -42,7 +42,7 @@ module tt_um_franco_mezzarapa_tb();
     initial begin
         // Initialize inputs
         clk = 0;
-        rst_n = 1;    // Reset is active low, so 1 means reset is inactive here
+        rst_n = 0;    // Reset is active low, so 1 means reset is inactive here
         ena = 0;
         ui_in = 8'b00000000;
 
