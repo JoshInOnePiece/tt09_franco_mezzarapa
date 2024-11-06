@@ -44,7 +44,7 @@ assign iRst = ~rst_n;
 // Output assign with respect to TT
 // assign uo_out[0] = oSerial_out;
 // assign uo_out[1] = oSerial_flag;
-// assign uo_out[2] = oEncryption_status;
+// /assign uo_out[2] = oEncryption_status;
 
 //Unused pins to prevent linter warning
 //Edit: added extraneous logic to improve density
