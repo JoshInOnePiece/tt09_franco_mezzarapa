@@ -7,7 +7,7 @@ module xor_encrypt(
     input [$clog2(64):0] iMessage_bit_counter,
     input [$clog2(8):0] iKey_bit_counter,
     output reg encryption_status,
-    output reg [$clog2(64) - 1:0] OCiphertext_counter,    // Ciphertext counter
+    output reg [$clog2(63+1) - 1:0] OCiphertext_counter,    // Ciphertext counter
     output reg [63:0] oCiphertext            // Ciphertext output
 );
 
@@ -15,7 +15,7 @@ always @(posedge iClk or negedge iRst) begin
     if (!iRst) begin
         OCiphertext_counter <= 6'b000000;          // Reset counter to 0
         oCiphertext <= 64'h0000000000000000;       // Initialize ciphertext to zero
-    end else if (iEn && OCiphertext_counter < 64) begin
+    end else if (iEn && OCiphertext_counter < 63+1) begin
         // Process the message in chunks of 8 bits only if counter is below 64
         if (iMessage_bit_counter == 64 && iKey_bit_counter == 8) begin
             encryption_status <= 1'b1; //Enable encryption status signal for CW if needed.

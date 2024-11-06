@@ -4,7 +4,19 @@
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
-#1
+
+async def seriallyInput(DUT, dataType, data, clockDelay):
+    dataString = str(data)
+    await ClockCycles(DUT.clk, clockDelay)
+    if(dataType == 1): #This means that we are inputting a message
+        for x in range(64):
+            DUT.ui_in[0].value = int(dataString[x])
+            await ClockCycles(DUT.clk, clockDelay)
+    else: # Otherwise we are inputting a key
+        for x in range(8):
+            DUT.ui_in[0].value = int(dataString[x])
+            await ClockCycles(DUT.clk, clockDelay)
+
 @cocotb.test()
 async def test_project(dut):
     dut._log.info("Start")
@@ -14,11 +26,32 @@ async def test_project(dut):
     cocotb.start_soon(clock.start())
     await ClockCycles(dut.clk, 2)
 
-    dut._.log.info("Reset")
+    dut._log.info("Reset")
     dut.clk.value = 0
     dut.ena.value = 0
     dut.rst_n.value = 1
     dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 10)
+
+    keyInteger = 0xA5
+    messageInteger = 0xA3B1F9D2E7C6A594
+    key = format(keyInteger, '0>8b')
+    message = format(messageInteger, '0>64b')
+
+    dut.ena.value = 0
+    dut.rst_n.value = 0
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 2)
+    dut.rst_n.value = 1
+    dut.ena.value = 1
+    await ClockCycles(dut.clk, 1)
+    # Loading in key
+    dut.ui_in[1].value = 1
+    await seriallyInput(DUT=dut, dataType=0, data=key, clockDelay=1)
+    dut.ui_in[1].value = 0
+    dut.ui_in[2].value = 1
+    await seriallyInput(DUT=dut, dataType=1, data=message, clockDelay=1)
+    dut.ui_in[2].value = 0
     await ClockCycles(dut.clk, 10)
 
     #Reset

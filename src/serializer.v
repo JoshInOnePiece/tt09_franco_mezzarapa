@@ -1,9 +1,9 @@
-module serialize #(parameter MSG_SIZE = 64)(
+module serializer #(parameter MSG_SIZE = 63)(
     input iEn,
     input iClk,
     input iRst,
-    input [$clog2(MSG_SIZE) - 1:0] iCiphertext_counter,
-    input [MSG_SIZE - 1:0] iCiphertext,
+    input [$clog2(MSG_SIZE+1)-1:0] iCiphertext_counter,
+    input [MSG_SIZE :0] iCiphertext,
     output reg oSerial_out,
     output reg oSerial_flag
 );
@@ -18,7 +18,7 @@ always @(posedge iClk or negedge iRst) begin
         oSerial_flag <= 1'b0;
         serialized_counter <= MSG_SIZE - 1; // Start from the MSB
         done_serializing <= 0;
-    end else if (iEn && iCiphertext_counter == MSG_SIZE - 1 && !done_serializing) begin
+    end else if (iEn && iCiphertext_counter == MSG_SIZE && !done_serializing) begin
         if (serialized_counter >= 0) begin
             // Still serializing: send out ciphertext bit by bit
             oSerial_flag <= 1;

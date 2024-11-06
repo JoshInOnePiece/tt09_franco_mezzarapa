@@ -12,7 +12,7 @@ always @(posedge iClk or negedge iRst) begin
     // Reset triggered when new message and key are sent.    
     if (!iRst) begin
         oData <= {DATA_SIZE{1'b0}};
-        oBit_counter <= {$clog2(DATA_SIZE){1'b0}};
+        oBit_counter <= {($clog2(DATA_SIZE)+1){1'b0}};
     
     end else if ( iEn && iLoad_flag) begin
         
