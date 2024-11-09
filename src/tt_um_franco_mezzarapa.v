@@ -1,108 +1,91 @@
 module tt_um_franco_mezzarapa(
-
-//     input  clk,             // input clock.
-//     input  rst_n,             // input Reset Signal.
-//     input  ena,
-//     input  iSerial_in,       // input Serial In.
-//     input  iLoad_key,        // input load key flag.
-//     input  iLoad_msg,        // input load msg flag.
-//     output encryption_status, 
-//     output oSerial_out,
-//     output oSerial_flag
-
-    input clk,              // External clock
-    input ena,              // Enable line
-    input rst_n,            // Active low enable.
-    input  [7:0] ui_in,     // Inpute wire array
-    output [7:0] uo_out,    // Output wire array
+    input  wire [7:0] ui_in,    // Dedicated inputs
+    output wire [7:0] uo_out,   // Dedicated outputs
+    input  wire [7:0] uio_in,   // IOs: Input path
+    output wire [7:0] uio_out,  // IOs: Output path
+    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     
-    input [7:0] uio_in,     // Unused
-    output [7:0] uio_out,   // Unused
-    output [7:0] uio_oe     // Unused
+    input  wire       ena,      
+    input  wire       clk,      // clock
+    input  wire       rst_n    // reset_n - low to reset
 );
 
+localparam MSG_SIZE = 64;
+localparam KEY_SIZE = 8;
 
-// Original IO.
-wire iClk;
-wire iEn;
-wire iRst;
-wire iSerial_in;
-wire iLoad_key;
-wire iLoad_msg;
-wire oEncryption_status;
-wire oSerial_out;
-wire oSerial_flag;
+wire [$clog2(8): 0] oBit_counter_key;
+wire [$clog2(64): 0] oBit_counter_msg;
+wire [$clog2(64): 0] oBit_counter_ciphertext;
+    
+wire [63:0] output_message;
+wire [63:0] output_ciphertext;
+wire [7:0] key;
+    
 
-//Input assign with repsect to TT.
-assign iClk = clk;
-assign iRst = ~rst_n;
-assign iEn = ena;
-assign iSerial_in = ui_in[0];
-assign iLoad_key = ui_in[1];
-assign iLoad_msg = ui_in[2];
+// Unused Wires
+assign uio_out = 8'b0;
+assign uio_oe  = 8'b0;
 
-// Output assign with respect to TT
-assign uio_out[0] = oSerial_out;
-assign uio_out[1] = oSerial_flag;
-assign uio_out[2] = oEncryption_status;
+// unused output wires.
+assign uo_out[3] = 1'b0;
+assign uo_out[4] = 1'b0;
+assign uo_out[5] = 1'b0;
+assign uo_out[6] = 1'b0;
+assign uo_out[7] = 1'b0;
 
-//Unused pins to prevent linter warning
-//Edit: added extraneous logic to improve density
-wire _unused_pins = &{ui_in[7:3],uio_in[7:0]};
-assign uio_out = {3'b0,ui_in[7:3] ^ uio_in[7:3]};
-assign uio_oe = {3'b0,ui_in[7:3]};
-assign uo_out[7:3] = {ui_in[7:3] ^ uio_in[7:3]};
+ wire _unused = &{uio_in,ui_in[3],ui_in[4],ui_in[5],ui_in[6],ui_in[7],1'b0};
 
+//assign output_message = message;
 
-wire [63 : 0] message_content;      // This holds message plaintext.
-wire [7  : 0] key;                  // xor key used. 
-wire [63 : 0] ciphertext;
-
-wire [$clog2(64)  : 0] message_bit_counter;    // position counter for message. - 6 bits total.
-wire [$clog2(64)  : 0] ciphertext_bit_counter; //  position counter for ciphertext - 6 bits total.
-wire [$clog2(8)   : 0] key_bit_counter;        // position counter for key.      - 2 bits total.
-
-deserializer #(.DATA_SIZE(8)) deserializer_key(
-     .iClk(clk),
-     .iRst(rst_n),
-     .iEn(ena),
-     .iSerial_in(iSerial_in),
-     .iLoad_flag(iLoad_key),
-     .oData(key),
-     .oBit_counter(key_bit_counter)
+deserializer #(.MSG_SIZE(8)) deserializer_key(
+     .iData_in  (ui_in[0]),              // Data coming in serially
+     .iData_flag(ui_in[1]),              // Flag that determines when data is being loaded
+    
+     .clk   (clk),                       // Clock
+     .ena   (ena),                       // Enable
+     .rst_n (rst_n),                     // Reset
+    
+     .oBit_counter (oBit_counter_key),   // Bit counter for key
+     .oData_out(key)                     // Output for deserialized key
 );
 
-deserializer #(.DATA_SIZE(64)) deserializer_message(
-     .iClk(clk),
-     .iRst(rst_n),
-     .iEn(ena),
-     .iSerial_in(iSerial_in),
-     .iLoad_flag(iLoad_msg),
-     .oData(message_content),
-     .oBit_counter(message_bit_counter)
+deserializer #(.MSG_SIZE(64)) deserializer_msg(
+     .iData_in  (ui_in[0]),              // Data coming in serially
+     .iData_flag(ui_in[2]),              // Flag that determines when data is being loaded
+    
+     .clk   (clk),                       // Clock
+     .ena   (ena),                       // Enable
+     .rst_n (rst_n),                     // Reset
+    
+     .oBit_counter (oBit_counter_msg),   // Bit counter for message
+     .oData_out(output_message)                 // Output for deserialized message
 );
 
-xor_encrypt encryption_module(
-    .iClk(clk),       
-    .iRst(rst_n),       
-    .iEn(ena),
-    .iMessage(message_content),
+xor_encrypt xor_message(
+    .clk(clk),
+    .ena(ena),
+    .rst_n(rst_n),
+    
+    .iMessage(output_message),
     .iKey(key),
-    .iMessage_bit_counter(message_bit_counter),
-    .iKey_bit_counter(key_bit_counter),
-    .encryption_status(oEncryption_status),
-    .OCiphertext_counter(ciphertext_bit_counter),
-    .oCiphertext(ciphertext)
+    
+    .iMessage_bit_counter(oBit_counter_msg),
+    .iKey_bit_counter(oBit_counter_key),
+    
+    .encryption_status(uo_out[2]),                   //uo_out 3 is the encryption signal for the CW.
+    .oCiphertext_counter(oBit_counter_ciphertext),   //Counter for the ciphertext
+    .oCiphertext(output_ciphertext)                  // ciphertext output
 );
 
-serialize #(.MSG_SIZE(64)) serializer_unit(
-     .iEn(ena),
-     .iClk(clk),
-     .iRst(rst_n),
-     .iCiphertext_counter(ciphertext_bit_counter),        // Position counter for START OF serial operations.
-     .iCiphertext(ciphertext),                            // Ciphertext
-     .oSerial_out(oSerial_out),                           // Serial output
-     .oSerial_flag(oSerial_flag)                          // Serial status flag for receiving chip.
+serializer serialize_ciphertext(
+    .iData_in(output_ciphertext),
+    .iCounter(oBit_counter_ciphertext),
+    
+    .clk(clk),
+    .ena(ena),
+    .rst_n(rst_n),
+    
+    .oData_flag(uo_out[1]),
+    .oData_out(uo_out[0])
 );
-
 endmodule
