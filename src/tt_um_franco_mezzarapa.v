@@ -10,14 +10,16 @@ module tt_um_franco_mezzarapa(
     input  wire       rst_n    // reset_n - low to reset
 );
 
+localparam MSG_SIZE = 128;
+localparam KEY_SIZE = 8;
 
-wire [$clog2(8): 0] oBit_counter_key;
-wire [$clog2(64): 0] oBit_counter_msg;
-wire [$clog2(64): 0] oBit_counter_ciphertext;
+wire [$clog2(KEY_SIZE): 0] oBit_counter_key;
+wire [$clog2(MSG_SIZE): 0] oBit_counter_msg;
+wire [$clog2(MSG_SIZE): 0] oBit_counter_ciphertext;
     
-wire [63:0] output_message;
-wire [63:0] output_ciphertext;
-wire [7:0] key;
+wire [MSG_SIZE - 1:0] output_message;
+wire [MSG_SIZE - 1:0] output_ciphertext;
+wire [KEY_SIZE - 1:0] key;
     
 
 // Unused Wires
@@ -25,18 +27,17 @@ assign uio_out = 8'b0;
 assign uio_oe  = 8'b0;
 
 // unused output wires.
-assign uo_out[3:7] = {5{((ui_in[0] & ui_in[1]) & ui_in[3]^ui_in[4]) | ((!ui_in[0] & !ui_in[1]) & ui_in[4] | ui_in[5]) | ((ui_in[0] & !ui_in[1]) & ui_in[7]) | ((!ui_in[0] & ui_in[1]) & ui_in[4]^ui_in[7] & ui_in[5])}};
-// assign uo_out[3] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[4]);
-// assign uo_out[4] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[7]);
-// assign uo_out[5] = (ui_in[1] & ui_in[6]) | (!ui_in[1] & ui_in[3]);
-// assign uo_out[6] = (ui_in[1] & ui_in[6]) | (!ui_in[1] & ui_in[5]);
-// assign uo_out[7] = (ui_in[2] & ui_in[5]) | (!ui_in[2] & ui_in[3]);
+assign uo_out[3] = 1'b0;
+assign uo_out[4] = 1'b0;
+assign uo_out[5] = 1'b0;
+assign uo_out[6] = 1'b0;
+assign uo_out[7] = 1'b0;
 
  wire _unused = &{uio_in,ui_in[3],ui_in[4],ui_in[5],ui_in[6],ui_in[7],1'b0};
 
 //assign output_message = message;
 
-deserializer #(.MSG_SIZE(8)) deserializer_key(
+deserializer #(.MSG_SIZE(KEY_SIZE)) deserializer_key(
      .iData_in  (ui_in[0]),              // Data coming in serially
      .iData_flag(ui_in[1]),              // Flag that determines when data is being loaded
     
@@ -48,7 +49,7 @@ deserializer #(.MSG_SIZE(8)) deserializer_key(
      .oData_out(key)                     // Output for deserialized key
 );
 
-deserializer #(.MSG_SIZE(64)) deserializer_msg(
+deserializer #(.MSG_SIZE(MSG_SIZE)) deserializer_msg(
      .iData_in  (ui_in[0]),              // Data coming in serially
      .iData_flag(ui_in[2]),              // Flag that determines when data is being loaded
     
@@ -60,7 +61,7 @@ deserializer #(.MSG_SIZE(64)) deserializer_msg(
      .oData_out(output_message)                 // Output for deserialized message
 );
 
-xor_encrypt xor_message(
+xor_encrypt #(.MSG_SIZE(MSG_SIZE),.KEY_SIZE(KEY_SIZE)) xor_message(
     .clk(clk),
     .ena(ena),
     .rst_n(rst_n),
@@ -76,7 +77,7 @@ xor_encrypt xor_message(
     .oCiphertext(output_ciphertext)                  // ciphertext output
 );
 
-serializer serialize_ciphertext(
+serializer #(.MSG_SIZE(MSG_SIZE)) serialize_ciphertext(
     .iData_in(output_ciphertext),
     .iCounter(oBit_counter_ciphertext),
     
