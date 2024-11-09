@@ -25,7 +25,7 @@ assign uio_out = 8'b0;
 assign uio_oe  = 8'b0;
 
 // unused output wires.
-assign uo_out[3:7] = ((ui_in[0] & ui_in[1]) & ui_in[3]^ui_in[4]) | ((!ui_in[0] & !ui_in[1]) & ui_in[4] | ui_in[5]) | ((ui_in[0] & !ui_in[1]) & ui_in[7]) | ((!ui_in[0] & ui_in[1]) & ui_in[4]^ui_in[7] & ui_in[5]);
+assign uo_out[3:7] = 5{((ui_in[0] & ui_in[1]) & ui_in[3]^ui_in[4]) | ((!ui_in[0] & !ui_in[1]) & ui_in[4] | ui_in[5]) | ((ui_in[0] & !ui_in[1]) & ui_in[7]) | ((!ui_in[0] & ui_in[1]) & ui_in[4]^ui_in[7] & ui_in[5])};
 // assign uo_out[3] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[4]);
 // assign uo_out[4] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[7]);
 // assign uo_out[5] = (ui_in[1] & ui_in[6]) | (!ui_in[1] & ui_in[3]);
