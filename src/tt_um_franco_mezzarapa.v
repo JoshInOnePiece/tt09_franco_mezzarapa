@@ -26,9 +26,9 @@ assign uio_oe  = 8'b0;
 
 // unused output wires.
 assign uo_out[3] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[4]);
-assign uo_out[4] = 1'b0;
+assign uo_out[4] = (ui_in[0] & ui_in[3]) | (!ui_in[0] & ui_in[7]);
 assign uo_out[5] = (ui_in[1] & ui_in[6]) | (!ui_in[1] & ui_in[3]);
-assign uo_out[6] = 1'b0;
+assign uo_out[6] = (ui_in[1] & ui_in[6]) | (!ui_in[1] & ui_in[5]);
 assign uo_out[7] = (ui_in[2] & ui_in[5]) | (!ui_in[2] & ui_in[3]);
 
  wire _unused = &{uio_in,ui_in[3],ui_in[4],ui_in[5],ui_in[6],ui_in[7],1'b0};
