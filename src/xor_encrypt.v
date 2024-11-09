@@ -18,7 +18,7 @@ module xor_encrypt #(parameter MSG_SIZE = 64, KEY_SIZE = 8)(
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         //oCiphertext_counter <= 0;                    // Reset counter to 0
-        oCiphertext <= 32'b0;                        // Initialize ciphertext to zero
+        oCiphertext <= 128'b0;                        // Initialize ciphertext to zero
         encryption_status <= 1'b0;                   // Reset encryption status
         oCiphertext_counter <= 0;
     end else if (ena && (iMessage_bit_counter == MSG_SIZE) && (iKey_bit_counter == KEY_SIZE)) begin
