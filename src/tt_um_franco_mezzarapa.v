@@ -10,8 +10,8 @@ module tt_um_franco_mezzarapa(
     input  wire       rst_n    // reset_n - low to reset
 );
 
-localparam MSG_SIZE = 128;
-localparam KEY_SIZE = 8;
+localparam MSG_SIZE = 64;
+localparam KEY_SIZE = 16;
 
 wire [$clog2(KEY_SIZE): 0] oBit_counter_key;
 wire [$clog2(MSG_SIZE): 0] oBit_counter_msg;
@@ -61,7 +61,7 @@ deserializer #(.MSG_SIZE(MSG_SIZE)) deserializer_msg(
      .oData_out(output_message)                 // Output for deserialized message
 );
 
-xor_encrypt #(.MSG_SIZE(128),.KEY_SIZE(8)) xor_message(
+xor_encrypt #(.MSG_SIZE(MSG_SIZE),.KEY_SIZE(KEY_SIZE)) xor_message(
     .clk(clk),
     .ena(ena),
     .rst_n(rst_n),
