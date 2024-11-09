@@ -10,8 +10,8 @@ module tt_um_franco_mezzarapa(
     input  wire       rst_n    // reset_n - low to reset
 );
 
-localparam MSG_SIZE = 64;
-localparam KEY_SIZE = 16;
+localparam MSG_SIZE = 8;
+localparam KEY_SIZE = 32;
 
 wire [$clog2(KEY_SIZE): 0] oBit_counter_key;
 wire [$clog2(MSG_SIZE): 0] oBit_counter_msg;
