@@ -89,7 +89,7 @@ async def test_project(dut):
     dut.ui_in[2].value = 1
     for x in (MSG_SIZE-1, -1, -1 ):
         dut.ui_in[0].value = int(messageString[x])
-        await ClockCycles(dut.iClk, 1)
+        await ClockCycles(dut.clk, 1)
     
     dut.ui_in[2].value = 0
     dut.ui_in[0].value = 0
