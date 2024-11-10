@@ -24,7 +24,6 @@ async def test_project(dut):
     dut.ena.value = 0
     dut.ui_in.value = 0
     dut.uio_in.value = 0
-    rebuilt_debug = 0
 
     keyHex = 0xA5
     messageHex = 0xA3B1F9D2E7C6A594
