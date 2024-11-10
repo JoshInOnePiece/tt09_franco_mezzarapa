@@ -91,8 +91,8 @@ async def test_project(dut):
         rebuilt_debug[x] = dut.uo_out[7].value
 
     # Perform XOR operation on each 8-bit chunk of the message with the key
-    for x in (0, MSG_SIZE):
-        ciphertext[x:MSG_SIZE-1:8] = int(message[x:MSG_SIZE-1:8]) ^ int(keyString[0:MSG_SIZE-1:])
+    for x in (0, MSG_SIZE,8):
+        ciphertext[x:x+8] = message[x:x+8] ^ key
 
     rebuiltCipherTextHex = hex(int(''.join(map(str,rebuilt_ciphertext))))
     cipherTextHex = hex(int(''.join(map(str,ciphertext))))
