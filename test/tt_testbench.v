@@ -33,7 +33,7 @@ module tt_testbench();
     always #(CLOCK_PERIOD / 2) clk = ~clk; // Toggle clock every half period
 
     // Instantiate the top module
-    tt_um_franco_mezzarapa uut (
+    tt_um_franco_mezzarapa dut (
         .clk(clk),                    // Clock
         .ena(ena),                    // Enable
         .rst_n(rst_n),                // Reset (active low)
