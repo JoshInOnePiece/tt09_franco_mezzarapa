@@ -16,12 +16,12 @@ async def seriallyInput(DUT, dataType, data, clockDelay):
         DUT.iLoad_message.value = 1
         for x in range(64):
             DUT.iData_in.value = int(dataString[x])
-            await ClockCycles(DUT.iClk, clockDelay)
+            await ClockCycles(DUT.clk, clockDelay)
     else: # Otherwise we are inputting a key
         DUT.iLoad_key.value = 1
         for x in range(8):
             DUT.iData_in.value = int(dataString[x])
-            await ClockCycles(DUT.iClk, clockDelay)
+            await ClockCycles(DUT.clk, clockDelay)
     
 @cocotb.test()
 async def test_project(dut):
@@ -43,6 +43,8 @@ async def test_project(dut):
     messageHex = 0xA3B1F9D2E7C6A594
     key = format(keyHex, '0>32b')
     message = format(messageHex, '0>512b')
+    keyString = str(key)
+    messageString = str(message)
 
     # Set the clock period to 10 us (100 MHz)
     clock = Clock(dut.clk, 10, units="ns")
@@ -61,7 +63,7 @@ async def test_project(dut):
 
     dut.ui_in[1].value = 1
     for x in (KEY_SIZE-1, -1, -1):
-        dut.ui_in[0].value = key[x]
+        dut.ui_in[0].value = int(keyString[x])
         await ClockCycles(dut.clk, 1)
 
     dut.ui_in[1].value = 0
@@ -77,7 +79,7 @@ async def test_project(dut):
 
     dut.ui_in[1].value = 1
     for x in (KEY_SIZE-1, -1, -1):
-        dut.ui_in[0].value = key[x]
+        dut.ui_in[0].value = int(keyString[x])
         await ClockCycles(dut.clk, 1)
 
     dut.ui_in[1].value = 0
@@ -86,7 +88,7 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 5)
     dut.ui_in[2].value = 1
     for x in (MSG_SIZE-1, -1, -1 ):
-        dut.ui_in[0].value = message[i]
+        dut.ui_in[0].value = int(messageString[x])
         await ClockCycles(dut.iClk, 1)
     
     dut.ui_in[2].value = 0
