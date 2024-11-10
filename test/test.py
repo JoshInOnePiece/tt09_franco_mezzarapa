@@ -12,11 +12,11 @@ async def test_project(dut):
     KEY_SIZE = 8
     DEBUG_SIZE = 30
 
-    rebuilt_debug = [None] * (DEBUG_SIZE - 1)
-    key = [None] * (KEY_SIZE - 1)              
-    message = [None] * (MSG_SIZE - 1)           
-    rebuilt_ciphertext = [None] * (MSG_SIZE - 1)
-    ciphertext = [None] * (MSG_SIZE - 1)
+    rebuilt_debug = [None] * (DEBUG_SIZE)
+    key = [None] * (KEY_SIZE)              
+    message = [None] * (MSG_SIZE)           
+    rebuilt_ciphertext = [None] * (MSG_SIZE)
+    ciphertext = [None] * (MSG_SIZE)
 
     dut._log.info("Start")
     dut.clk.value = 0
