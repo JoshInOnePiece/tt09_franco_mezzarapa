@@ -82,13 +82,15 @@ async def test_project(dut):
     dut.ui_in[0].value = 0
 
     # Wait until ciphertext output is ready (assuming uo_out[1] as a flag)
-    await ClockCycles(dut.clk, 40)
-    for x in range(MSG_SIZE - 1, -1, -1):
+    while True:
+        if dut.uo_out[1].value == 1:
+            break  
+    for x in range(MSG_SIZE-1, 0, -1):
         await RisingEdge(dut.clk)
         rebuilt_ciphertext[x] = dut.uo_out[0].value
     
     # Capture 24-bit debug output serially from uo_out[7]
-    for x in range(DEBUG_SIZE - 1, -1, -1):
+    for x in range(DEBUG_SIZE-1, 0, -1):
         await RisingEdge(dut.clk)
         rebuilt_debug[x] = dut.uo_out[7].value
 
