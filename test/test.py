@@ -92,7 +92,7 @@ async def test_project(dut):
 
     # Perform XOR operation on each 8-bit chunk of the message with the key
     for x in (0, MSG_SIZE-1, 1):
-        ciphertext[x] = int(message[x]) ^ int(key[x%8])
+        ciphertext[x] = int(int(message[x]) ^ int(key[x%8]))
 
     rebuiltCipherTextHex = hex(int(''.join(map(str, rebuilt_ciphertext))))  #hex((rebuilt_ciphertext[0:MSG_SIZE-1]))
     cipherTextHex = hex(int(''.join(map(str, ciphertext))))                 #hex((ciphertext[0:MSG_SIZE-1]))
