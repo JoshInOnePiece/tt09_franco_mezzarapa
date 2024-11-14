@@ -94,9 +94,9 @@ async def test_project(dut):
     for x in (0, MSG_SIZE-1, 1):
         ciphertext[x] = int(message[x]) ^ int(key[x%8])
 
-    rebuiltCipherTextHex = hex(int(rebuilt_ciphertext[0:MSG_SIZE-1]))
-    cipherTextHex = hex(int(ciphertext[0:MSG_SIZE-1]))
-    rebuiltDebugHex = hex(int(rebuilt_debug[0:MSG_SIZE-1]))
+    rebuiltCipherTextHex = hex((rebuilt_ciphertext[0:MSG_SIZE-1]))
+    cipherTextHex = hex((ciphertext[0:MSG_SIZE-1]))
+    rebuiltDebugHex = hex((rebuilt_debug[0:MSG_SIZE-1]))
 
     # Display the results
     print("Key:                   :", keyHex)
@@ -110,13 +110,13 @@ async def test_project(dut):
     if cipherTextHex == rebuiltCipherTextHex:
         print("Test Passed: Ciphertext matches rebuilt_ciphertext")
     elif 0x0f1d557e4b6a0938 == rebuiltCipherTextHex:
-        print("Test Passed: Ciphertext matches XOR with key AC - ui_in[3] - Always Active.");
+        print("Test Passed: Ciphertext matches XOR with key AC - ui_in[3] - Always Active.")
     elif 0x07f6d250e3b1a7948 == rebuiltCipherTextHex:
-        print("Test Passed: Ciphertext matches XOR with key AC - ui_in[4] - Reset Active.");
+        print("Test Passed: Ciphertext matches XOR with key AC - ui_in[4] - Reset Active.")
     elif (messageHex == rebuiltCipherTextHex):
-        print("Test Passed: Ciphertext matches message (no encryption) - ui_in[5] - No key.");
+        print("Test Passed: Ciphertext matches message (no encryption) - ui_in[5] - No key.")
     else:
-        print("Test Failed: Ciphertext does not match any expected result.");
+        print("Test Failed: Ciphertext does not match any expected result.")
 
 
     
