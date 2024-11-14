@@ -94,9 +94,13 @@ async def test_project(dut):
     for x in (0, MSG_SIZE-1, 1):
         ciphertext[x] = int(message[x]) ^ int(key[x%8])
 
-    cipherTextInteger = (rebuilt_ciphertext[0:MSG_SIZE-1])
-    cipherTextInteger = (ciphertext[0:MSG_SIZE-1])
-    debugInteger = ((rebuilt_debug[0:MSG_SIZE-1]))
+    rebuiltCipherTextHex = (rebuilt_ciphertext[0:MSG_SIZE-1])
+    cipherTextHex = (ciphertext[0:MSG_SIZE-1])
+    rebuiltDebugHex = (rebuilt_debug[0:MSG_SIZE-1])
+
+    rebuiltCipherTextHex = hex(int(rebuiltCipherTextHex))
+    cipherTextHex = hex(int(cipherTextHex))
+    rebuiltDebugHex = hex(int(rebuiltDebugHex))
 
     # Display the results
     print("Key:                   :", keyHex)
