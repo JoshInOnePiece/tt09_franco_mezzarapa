@@ -94,26 +94,28 @@ async def test_project(dut):
     for x in range(0, MSG_SIZE-1, 1):
         ciphertext[x] = int(int(message[x]) ^ int(key[x%8]))
     
-    rebuiltCipherTextHex = hex(int(''.join(map(str, rebuilt_ciphertext))))  #hex((rebuilt_ciphertext[0:MSG_SIZE-1]))
-    cipherTextHex = hex(int(''.join(map(str, ciphertext))))                 #hex((ciphertext[0:MSG_SIZE-1]))
-    rebuiltDebugHex = hex(int(''.join(map(str, rebuilt_debug))))            #hex((rebuilt_debug[0:MSG_SIZE-1]))
+    # rebuiltCipherTextHex = (int(''.join(map(str, rebuilt_ciphertext))))  #hex((rebuilt_ciphertext[0:MSG_SIZE-1]))
+    # cipherTextHex = (int(''.join(map(str, ciphertext))))                 #hex((ciphertext[0:MSG_SIZE-1]))
+    # rebuiltDebugHex = (int(''.join(map(str, rebuilt_debug))))            #hex((rebuilt_debug[0:MSG_SIZE-1]))
 
     # Display the results
     print("Key:                   :", keyHex)
     print("Message:               :", messageHex)
-    print("Computed Ciphertext:   :", cipherTextHex)
-    print("Rebuilt Ciphertext:    :", rebuiltCipherTextHex)
-    print("Debug Output (24 bits) :", rebuiltDebugHex)
+    print("Computed Ciphertext:   :", ciphertext)
+    print("Rebuilt Ciphertext:    :", rebuilt_ciphertext)
+    print("Debug Output (24 bits) :", rebuilt_debug)
 
+    compareKeyHex = 0x0f1d557e4b6a0938
+    compareKeyBinary = format(compareKeyHex, '0>64b')
+    compareKeyString = str(compareKeyBinary)
+    compareKey = list(map(int, compareKeyString))
     
     # Compare computed ciphertext with rebuilt_ciphertext
-    if cipherTextHex == rebuiltCipherTextHex:
+    if ciphertext == rebuilt_ciphertext:
         print("Test Passed: Ciphertext matches rebuilt_ciphertext")
-    elif 0x0f1d557e4b6a0938 == rebuiltCipherTextHex:
-        print("Test Passed: Ciphertext matches XOR with key AC - ui_in[3] - Always Active.")
-    elif 0x07f6d250e3b1a7948 == rebuiltCipherTextHex:
+    elif compareKey == rebuilt_ciphertext:
         print("Test Passed: Ciphertext matches XOR with key AC - ui_in[4] - Reset Active.")
-    elif (messageHex == rebuiltCipherTextHex):
+    elif (messageHex == rebuilt_ciphertext):
         print("Test Passed: Ciphertext matches message (no encryption) - ui_in[5] - No key.")
     else:
         print("Test Failed: Ciphertext does not match any expected result.")
