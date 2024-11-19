@@ -86,12 +86,12 @@ async def test_project(dut):
         rebuilt_ciphertext[x] = dut.uo_out[0].value
     
     # Capture 24-bit debug output serially from uo_out[7]
-    for x in range(DEBUG_SIZE-1, 0, -1):
+    for x in range(DEBUG_SIZE-1, -1, -1):
         await RisingEdge(dut.clk)
         rebuilt_debug[x] = dut.uo_out[7].value
 
     # Perform XOR operation on each 8-bit chunk of the message with the key
-    for x in range(0, MSG_SIZE-1, 1):
+    for x in range(0, MSG_SIZE, 1):
         ciphertext[x] = int(int(message[x]) ^ int(key[x%8]))
     
     # rebuiltCipherTextHex = (int(''.join(map(str, rebuilt_ciphertext))))  #hex((rebuilt_ciphertext[0:MSG_SIZE-1]))
