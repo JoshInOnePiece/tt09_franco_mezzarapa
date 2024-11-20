@@ -84,6 +84,7 @@ async def test_project(dut):
     dut._log.info("Checking for output flag")
     while dut.uo_out[1].value == 0:
         await ClockCycles(dut.clk, 1)
+    dut._log.info("Output flag is 1")
 
     for x in range(MSG_SIZE-1, -1, -1):
         await RisingEdge(dut.clk)
