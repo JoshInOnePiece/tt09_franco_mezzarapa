@@ -81,6 +81,7 @@ async def test_project(dut):
     dut.ui_in[0].value = 0
 
     # Wait until ciphertext output is ready (assuming uo_out[1] as a flag) 
+    print("Wocky slush")
     while dut.uo_out[1].value == 0:
         await ClockCycles(dut.clk, 1)
 
