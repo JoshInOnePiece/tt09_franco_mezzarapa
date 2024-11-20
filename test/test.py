@@ -82,7 +82,7 @@ async def test_project(dut):
 
     # Wait until ciphertext output is ready (assuming uo_out[1] as a flag) 
     while dut.uo_out[1].value == 0:
-        continue
+        await ClockCycles(dut.clk, 1)
 
     for x in range(MSG_SIZE-1, -1, -1):
         await RisingEdge(dut.clk)
