@@ -11,6 +11,7 @@ VERILOG_SOURCES = $(SRC_DIR)/xor_encrypt.v $(SRC_DIR)/tt_um_franco_mezzarapa.v $
 TOPLEVEL = tt_um_franco_mezzarapa
 
 # MODULE is the basename of the Python test file
+
 MODULE = test
 
 # include cocotb's make rules to take care of the simulator setup
